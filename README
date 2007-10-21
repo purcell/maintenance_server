@@ -1,13 +1,75 @@
 MaintenanceServer
 =================
 
-Introduction goes here.
+It is assumed that your web application is a mongrel cluster running
+behind Pound, Pen, or another load balancing program that can be
+configured to use an 'emergency' back-end for when all regular
+back-ends fail.
+
+This plugin provides a lightweight 'maintenance' server to act as that
+emergency back-end for when your Rails app is down for maintenance, or
+due to a fatal error.
+
+After installation, a new script/maintenance_server command is
+available, which runs a small (Mongrel) web server instance listening
+on the specified port.
+
+The web server will serve files under RAILS_ROOT/public as usual,
+while unconditionally returning a "503 Unavailable" server response
+for any other request, and rendering a nice apologetic HTML page at
+RAILS_ROOT/public/maintenance.html (provided).
 
 
 Example
 =======
 
-Example goes here.
+Install the plugin as usual.  If you do not install it with either
+script/plugin or rapt, then be sure to run the install.rb script
+manually.
+
+The installation will create a new 'script/maintenance_server' script,
+and a reasonable default 'unavailable' page at 'public/maintenance.html'.
+
+Start the maintenance_server on the port of your choice, as follows:
+
+  ./script/maintenance_server PORT
+
+(You may want to use software such as daemontools or runit to ensure
+that the server is automatically started with your system and
+restarted if it fails or is killed.)
+
+Given mongrel_rails back-ends on ports 8000, 8001 etc., and
+maintenance_server running on port 8020, sample configuration for
+Pound might look something like this:
+
+  ListenHTTP
+    Address 0.0.0.0
+    Port    80
+    Service
+      BackEnd
+        Address 127.0.0.1
+        Port    8000
+      End
+      BackEnd
+        Address 127.0.0.1
+        Port    8001
+      End
+      ...  # other back-ends here
+      Emergency
+        Address 127.0.0.1
+        Port    8020
+      End
+    End
+  End
+
+In the same scenario, one might start the excellent Pen load-balancer
+with the following command-line:
+
+  pen -f -r -b 5 -e localhost:8020 \
+    localhost:80 \
+    localhost:8000 localhost:8001 localhost:8002 \
+    ...
 
 
-Copyright (c) 2007 [name of plugin creator], released under the MIT license
+
+Copyright (c) 2007 Steve Purcell, released under the MIT license
