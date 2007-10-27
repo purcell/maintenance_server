@@ -1,0 +1,6 @@
+author: Steve Purcell
+summary: "An emergency server for when your load-balanced mongrel cluster is down"
+homepage: http://www.sanityinc.com/
+plugin: http://rails.sanityinc.com/plugins/maintenance_server/
+license: MIT
+rails_version: 1.2+

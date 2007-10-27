@@ -19,6 +19,16 @@ while unconditionally returning a "503 Unavailable" server response
 for any other request, and rendering a nice apologetic HTML page at
 RAILS_ROOT/public/maintenance.html (provided).
 
+The plugin's home on the web is here:
+
+   http://git.sanityinc.com/?p=maintenance_server.git;a=summary
+
+The plugin is discussed in blog articles here:
+
+   http://www.sanityinc.com/
+
+Send feedback or patches by email to steve@sanityinc.com
+
 
 Example
 =======
